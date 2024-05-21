@@ -73,7 +73,7 @@ private:
     void buildMainTerms(int* inputArray);
     bool uncoveredMainTermsRemained();
     bool isMainTerm(const int& target);
-    std::string termToExpression(std::vector<int> terms, std::vector<int> deletedArgs) const;
+    std::string termToExpression(std::vector<int> terms, std::vector<int> deletedArgs);
 
 
 

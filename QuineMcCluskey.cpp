@@ -577,24 +577,24 @@ std::string QuineMcCluskey::getStringExpression() {
         std::string result;
         for (const auto& elem: primeImplicants) {
             if (elem.isRequired == 1){
-                result += termToExpression(elem.termsIncluded, elem.deletedArgs) + " + "; //Check isMaxTermInput and bits count.
+                result += maxTermIsInput ? "(" : "";
+                result += termToExpression(elem.termsIncluded, elem.deletedArgs); //Check isMaxTermInput and bits count.
+                result += maxTermIsInput ? ")" : "+";
             }
         }
+        if (!maxTermIsInput)
+            result.erase(result.size() - 1);
         return result;
     } else {
         return "not solved yet!";
     }
 }
 
-std::string QuineMcCluskey::termToExpression(std::vector<int> terms, std::vector<int> deletedArgs) const {
+std::string QuineMcCluskey::termToExpression(std::vector<int> terms, std::vector<int> deletedArgs) {
     std::string Inputs[] = {
             "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
             "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
     };
-//    std::string PrimeInputs[] = {
-//            "A\'", "B′", "C′", "D′", "E′", "F′", "G′", "H′", "I′", "J′", "K′", "L′", "M′",
-//            "N′", "O′", "P′", "Q′", "R′", "S′", "T′", "U′", "V′", "W′", "X′", "Y′", "Z′"
-//    };
 
     //turning deletedArgs to indexes :
     for (auto& arg: deletedArgs) {
@@ -603,44 +603,32 @@ std::string QuineMcCluskey::termToExpression(std::vector<int> terms, std::vector
 
     std::string result = intToBinaryString(terms[0], bitsNum);
 
-
-
-//    // Turning binary result to ABC representation:
-//    std::string abcRepresentation;
-//    for (int i = 0; i < bitsNum; ++i) {
-//        abcRepresentation += (result[i] == '1' ? Inputs[i] : PrimeInputs[i]);
-//    }
-
-    //remove deleted indexes :
     std::sort(deletedArgs.rbegin(), deletedArgs.rend());
-
-    // Remove characters at specified indices
-//    for (const auto& index : deletedArgs) {
-//        if (index < result.length()) {
-//            result.erase(index, 1);
-//        }
-//    }
-
     std::string abcRepresentation{};
-//    for (int i = 0; i < bitsNum; ++i) {
-//        if (deletedArgs[i] < result.length()) {
-//            result.erase(deletedArgs[i], 1);
-//        }
-//        if (i is not in deletedArgs){
-//            abcRepresentation += (result[i] == '1' ? Inputs[i] : PrimeInputs[i]);
-//        }
-//    }
+    int counter = 0;
     for (int i = 0; i < bitsNum; ++i) {
         if (std::find(deletedArgs.begin(), deletedArgs.end(), i) != deletedArgs.end()) {
             // Skip deleted indices
             continue;
         }
 
-        if (result[i] == '1') {
-            abcRepresentation += Inputs[i];
+        if(!maxTermIsInput){
+            if (result[i] == '1') {
+                abcRepresentation += Inputs[i];
+            } else {
+                abcRepresentation += Inputs[i] + "\'";
+            }
         } else {
-            abcRepresentation += Inputs[i] + "\'";
+            if (result[i] == '1') {
+                abcRepresentation += Inputs[i] + "\'";
+            } else {
+                abcRepresentation += Inputs[i];
+            }
+            if (counter != bitsNum-deletedArgs.size()-1){
+                abcRepresentation += "+";
+            }
         }
+        counter++;
     }
     return abcRepresentation;
 }

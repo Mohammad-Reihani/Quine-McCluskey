@@ -5,7 +5,7 @@ int main() {
     int m[11] = {9,12,13,15};
     int d[7] = {1,4,5,7,8,11,14};
     int c[12] = {0,1,2,5,6,7};
-    QuineMcCluskey test(m, 4, d, 7, false);
+    QuineMcCluskey test(m, 4, d, 7, true);
 //    QuineMcCluskey test(c, 6, false);
     test.solve();
 
