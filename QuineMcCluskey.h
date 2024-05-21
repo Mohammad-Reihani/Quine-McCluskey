@@ -5,13 +5,15 @@
 #ifndef UNTITLED_QUINEMCCLUSKEY_H
 #define UNTITLED_QUINEMCCLUSKEY_H
 
-//#include <iostream>
+#include <iostream>
 
 
 #include <vector>
 #include <utility>
 #include <algorithm>
 #include <string>
+#include <cmath>
+#include <bitset>
 
 //this structure stores element of QMC table!!(chi begam akhe!) | so many things are in here, just take a look
 struct GroupedData {
@@ -71,9 +73,9 @@ private:
     void buildMainTerms(int* inputArray);
     bool uncoveredMainTermsRemained();
     bool isMainTerm(const int& target);
+    std::string termToExpression(std::vector<int> terms, std::vector<int> deletedArgs) const;
 
-    // Optional Functions :
-    void printSimplifiedExpression();
+
 
     // Static Functions :
     static int countOnesInBinary(int num);
@@ -83,6 +85,7 @@ private:
     static bool isSubVector(const std::vector<int>& subVec, const std::vector<int>& mainVec);
     static bool isSubstringCustom(const std::string& str1, const std::string& str2);
     static void removeDuplicatesAndSortArray(int* arr, int& size);
+    static std::string intToBinaryString(const int& num , const int& bits);
 public:
 
     // Constructors :
@@ -90,12 +93,19 @@ public:
     QuineMcCluskey(int* mainTermsInputArray, int mainTermsInputArrayLength, bool maxTermsAreInput);//The constructor for NO DON'T CARE'S
     QuineMcCluskey(int* mainTermsInputArray, int mainTermsInputArrayLength, int* dontCaresInputArray, int dontCaresInputArrayLength, bool maxTermsAreInput);//The constructor for NO DON'T CARE'S
 
+
+    // Optional Functions :
+    void printSimplifiedExpression();
+    std::string getStringExpression();
     // Optional : Getters :
     const std::vector<MainTerm> &getMainTerms() const;
     const std::vector<GroupedData> &getGroupedTerms() const;
     const std::vector<PrimeImplicant> &getPrimeImplicants() const;
 
     void solve();
+
+
+
 };
 
 

@@ -48,5 +48,7 @@ int main() {
         cout << " | is covered : " << data.isCovered <<  endl;
     }
 
+    cout << "*****************************************" << endl << "here : " << test.getStringExpression() << endl;
+
     return 0;
 }

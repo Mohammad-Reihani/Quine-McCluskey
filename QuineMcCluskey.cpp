@@ -572,3 +572,89 @@ bool QuineMcCluskey::compareVectors(const std::vector<int>& vec1, const std::vec
     }
 }
 
+std::string QuineMcCluskey::getStringExpression() {
+    if(isSolved){
+        std::string result;
+        for (const auto& elem: primeImplicants) {
+            if (elem.isRequired == 1){
+                result += termToExpression(elem.termsIncluded, elem.deletedArgs) + " + "; //Check isMaxTermInput and bits count.
+            }
+        }
+        return result;
+    } else {
+        return "not solved yet!";
+    }
+}
+
+std::string QuineMcCluskey::termToExpression(std::vector<int> terms, std::vector<int> deletedArgs) const {
+    std::string Inputs[] = {
+            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+            "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+    };
+//    std::string PrimeInputs[] = {
+//            "A\'", "B′", "C′", "D′", "E′", "F′", "G′", "H′", "I′", "J′", "K′", "L′", "M′",
+//            "N′", "O′", "P′", "Q′", "R′", "S′", "T′", "U′", "V′", "W′", "X′", "Y′", "Z′"
+//    };
+
+    //turning deletedArgs to indexes :
+    for (auto& arg: deletedArgs) {
+        arg = bitsNum - 1 - int(log2(arg));
+    }
+
+    std::string result = intToBinaryString(terms[0], bitsNum);
+
+
+
+//    // Turning binary result to ABC representation:
+//    std::string abcRepresentation;
+//    for (int i = 0; i < bitsNum; ++i) {
+//        abcRepresentation += (result[i] == '1' ? Inputs[i] : PrimeInputs[i]);
+//    }
+
+    //remove deleted indexes :
+    std::sort(deletedArgs.rbegin(), deletedArgs.rend());
+
+    // Remove characters at specified indices
+//    for (const auto& index : deletedArgs) {
+//        if (index < result.length()) {
+//            result.erase(index, 1);
+//        }
+//    }
+
+    std::string abcRepresentation{};
+//    for (int i = 0; i < bitsNum; ++i) {
+//        if (deletedArgs[i] < result.length()) {
+//            result.erase(deletedArgs[i], 1);
+//        }
+//        if (i is not in deletedArgs){
+//            abcRepresentation += (result[i] == '1' ? Inputs[i] : PrimeInputs[i]);
+//        }
+//    }
+    for (int i = 0; i < bitsNum; ++i) {
+        if (std::find(deletedArgs.begin(), deletedArgs.end(), i) != deletedArgs.end()) {
+            // Skip deleted indices
+            continue;
+        }
+
+        if (result[i] == '1') {
+            abcRepresentation += Inputs[i];
+        } else {
+            abcRepresentation += Inputs[i] + "\'";
+        }
+    }
+    return abcRepresentation;
+}
+
+std::string QuineMcCluskey::intToBinaryString(const int& num, const int& bits) {
+
+    std::bitset<128> binary(num);
+    std::string binaryStr = binary.to_string();
+
+    // Trim the string to the desired number of bits
+    if (bits < 128) {
+        binaryStr = binaryStr.substr(128 - bits);
+    }
+
+    return binaryStr;
+}
+
