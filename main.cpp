@@ -100,7 +100,8 @@ int main() {
         cout << " | is covered : " << data.isCovered <<  endl;
     }
     cout << "-------------------------------------------------------------------" << endl;
-    cout << "Simplified Expression : " << qmc.getStringExpression() << endl;//finally showing the simplified expression
+    cout << "Simplified Expression : " << endl;
+    cout << qmc.getStringExpression() << endl;//finally showing the simplified expression
 
     return 0;
 }
